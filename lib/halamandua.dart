@@ -14,7 +14,7 @@ class MyUno extends StatefulWidget {
 }
 
 class _MyUnoState extends State<MyUno> {
-  var judul = "Perpustakaan Gemoy IT TELKOM SBY";
+  var judul = "Perpustakaan IT TELKOM SBY";
 
   @override
   Widget build(BuildContext context) {

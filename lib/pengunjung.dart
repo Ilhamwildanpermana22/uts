@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class BiodataPenyewa extends StatelessWidget {
-  const BiodataPenyewa({super.key});
+  String? judul;
+  BiodataPenyewa({super.key, this.judul});
 
   @override
   Widget build(BuildContext context) {
@@ -13,8 +14,12 @@ class BiodataPenyewa extends StatelessWidget {
             },
             icon: const Icon(Icons.arrow_back)),
       ),
-      body: const Center(
-          child: Text("silahkan ke perpustakaan untuk mengambil buku")),
+      body: Column(
+        children: [
+          Text(judul!),
+          Text("silahkan ke perpustakaan untuk mengambil buku"),
+        ],
+      ),
     );
   }
 }

@@ -22,6 +22,8 @@ class MyApp extends StatelessWidget {
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key});
+  // String username = "";
+  // String password = "";
 
   get greyTextStyle => null;
 

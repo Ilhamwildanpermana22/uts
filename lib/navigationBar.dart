@@ -32,9 +32,8 @@ class _BottomNavigationBarExampleState
       TextStyle(fontSize: 15, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     Center(
-      child: Text(
-        'Selamat datang di E-perpustakaan IT TELKOM SBY',
-        style: optionStyle,
+      child: Image(
+        image: AssetImage("assets/images/perpus.jpeg"),
       ),
     ),
     MyUno(),

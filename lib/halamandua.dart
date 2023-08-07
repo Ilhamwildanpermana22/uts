@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_uts/peminjaman.dart';
 import 'package:flutter_uts/pengunjung.dart';
 import 'package:flutter_uts/halamandua.dart';
 import 'package:flutter_uts/service/book_service.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MaterialApp(home: MyUno()));
@@ -15,214 +18,133 @@ class MyUno extends StatefulWidget {
 }
 
 class _MyUnoState extends State<MyUno> {
+  List<dynamic> data = [];
+  Future<void> deleteData(String id) async {
+    final response =
+        await http.delete(Uri.parse('http://localhost:1337/api/beritas/$id'));
+
+    if (response.statusCode == 200) {
+      fetchData();
+    } else {
+      throw Exception('Failed to delete data');
+    }
+  }
+
+  Future<void> fetchData() async {
+    try {
+      final response =
+          await http.get(Uri.parse('http://localhost:1337/api/beritas/'));
+
+      if (response.statusCode == 200) {
+        setState(() {
+          data = json.decode(response.body);
+        });
+      } else {
+        throw Exception('Failed to fetch data');
+      }
+    } catch (error) {
+      throw Exception('Failed to connect to the server');
+    }
+  }
+
   var judul = "Perpustakaan IT TELKOM SBY";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(judul)),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        setState(() {
-          judul = "perpustakaan IT TELKOM SBY";
-        });
-      }),
-      body: FutureBuilder(
-        future: BookService().getBook(),
-        builder: ((context, snapshot) {
-          if (snapshot.hasData) {
-            var _dataBook = snapshot.data;
-            return GridView.builder(
-                itemCount: _dataBook!.data.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                ),
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => BiodataPenyewa(
-                                judul: _dataBook?.data[index].attributes.buku ??
-                                    "",
-                              )));
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Image(
-                            image: NetworkImage(
-                              _dataBook?.data[index].attributes.images ??
-                                  "https://picsum.photos/id/238/200/300",
-                            ),
-                          ),
-                          Text(_dataBook?.data[index].attributes.buku ?? ""),
-                        ],
-                      ),
-                    ),
-                  );
-                });
-            // return ListView.builder(
-            //   scrollDirection: Axis.vertical,
-            //   shrinkWrap: true,
-            //   itemCount: _dataBook!.data.length,
-            //   itemBuilder: ((context, index) {
-            //     return GestureDetector(
-            //       onTap: () {
-            //         print("Berhasil ");
-            //       },
-            //       child: Container(
-            //         padding: EdgeInsets.all(10),
-            //         child: Row(
-            //           children: [
-            //             list
-            //             Image(
-            //               image: NetworkImage(
-            //                 _dataBook?.data[index].attributes.images ??
-            //                     "https://picsum.photos/id/238/200/300",
-            //               ),
-            //             ),
-            //             Text(_dataBook?.data[index].attributes.buku ?? ""),
-            //           ],
-            //         ),
-            //       ),
-            //     );
-            //   }),
-            // );
-          }
-          return Container();
-        }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => PinjamanBuku(),
+            ),
+          );
+        },
+        child: Icon(Icons.add),
       ),
-      // body: ListView(
-      //   // scrollDirection: Axis.horizontal,
-      //   children: [
-      //     Row(
-      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //       children: [
-      //         Image.asset(
-      //           "assets/images/aplikasi bergerak.jpeg",
-      //           height: 250,
-      //           width: 200,
-      //         ),
-      //         Column(
-      //           children: const [
-      //             Text(
-      //               'Aplikasi Bergerak',
-      //               style: TextStyle(fontSize: 20),
-      //             ),
-      //             Text('138 halaman')
-      //           ],
-      //         ),
-      //         ElevatedButton(
-      //             onPressed: () {
-      //               Navigator.push(
-      //                   context,
-      //                   MaterialPageRoute(
-      //                       builder: (context) => const BiodataPenyewa()));
-      //             },
-      //             child: const Text("Pinjam")),
-      //       ],
-      //     ),
-      //     Row(
-      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //       children: [
-      //         Image.asset(
-      //           "assets/images/basis data.jpeg",
-      //           height: 260,
-      //           width: 200,
-      //         ),
-      //         Column(
-      //           children: const [
-      //             Text(
-      //               'Basis Data',
-      //               style: TextStyle(fontSize: 20),
-      //             ),
-      //             Text('279 halaman')
-      //           ],
-      //         ),
-      //         ElevatedButton(
-      //             onPressed: () {
-      //               Navigator.push(
-      //                   context,
-      //                   MaterialPageRoute(
-      //                       builder: (context) => const BiodataPenyewa()));
-      //             },
-      //             child: const Text("Pinjam")),
-      //       ],
-      //     ),
-      //     Row(
-      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //       children: [
-      //         Image.asset(
-      //           "assets/images/kecerdasan buatan.jpeg",
-      //           height: 255,
-      //           width: 200,
-      //         ),
-      //         Column(
-      //           children: const [
-      //             Text('Kecerdasan Buatan', style: TextStyle(fontSize: 20)),
-      //             Text('431 halaman')
-      //           ],
-      //         ),
-      //         ElevatedButton(
-      //             onPressed: () {
-      //               Navigator.push(
-      //                   context,
-      //                   MaterialPageRoute(
-      //                       builder: (context) => const BiodataPenyewa()));
-      //             },
-      //             child: const Text("Pinjam")),
-      //       ],
-      //     ),
-      //     Row(
-      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //       children: [
-      //         Image.asset(
-      //           "assets/images/metode penelitian.jpeg",
-      //           height: 220,
-      //           width: 200,
-      //         ),
-      //         Column(
-      //           children: const [
-      //             Text('Metode Penilitian', style: TextStyle(fontSize: 20)),
-      //             Text('372 halaman')
-      //           ],
-      //         ),
-      //         ElevatedButton(
-      //             onPressed: () {
-      //               Navigator.push(
-      //                   context,
-      //                   MaterialPageRoute(
-      //                       builder: (context) => const BiodataPenyewa()));
-      //             },
-      //             child: const Text("Pinjam")),
-      //       ],
-      //     ),
-      //     Row(
-      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //       children: [
-      //         Image.asset(
-      //           "assets/images/robotika-.jpeg",
-      //           height: 320,
-      //           width: 200,
-      //         ),
-      //         Column(
-      //           children: const [
-      //             Text('Robotika', style: TextStyle(fontSize: 20)),
-      //             Text('283 halaman')
-      //           ],
-      //         ),
-      //         ElevatedButton(
-      //             onPressed: () {
-      //               Navigator.push(
-      //                   context,
-      //                   MaterialPageRoute(
-      //                       builder: (context) => const BiodataPenyewa()));
-      //             },
-      //             child: const Text("Pinjam")),
-      //       ],
-      //     ),
-      //   ],
-      // )
+      body: FutureBuilder(
+          future: BookService().getBook(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              var _dataBook = snapshot.data;
+              return GridView.builder(
+                  itemCount: _dataBook!.data.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: 0.6,
+                    crossAxisCount: 2,
+                  ),
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        showDialog<void>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title:
+                                  Text(_dataBook.data[index].attributes.buku),
+                              content:
+                                  Text(_dataBook.data[index].attributes.isi),
+                              actions: <Widget>[
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    textStyle:
+                                        Theme.of(context).textTheme.labelLarge,
+                                  ),
+                                  child: const Text('keluar'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    textStyle:
+                                        Theme.of(context).textTheme.labelLarge,
+                                  ),
+                                  child: const Text('hapus'),
+                                  onPressed: () {
+                                    deleteData(
+                                        _dataBook.data[index].id.toString());
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                            left: 5, right: 5, bottom: 10),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black45,
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Image(
+                              image: NetworkImage(
+                                _dataBook.data[index].attributes.images,
+                              ),
+                              width: 350,
+                              height: 300,
+                            ),
+                            Text(_dataBook.data[index].attributes.buku),
+                          ],
+                        ),
+                      ),
+                    );
+                  });
+            }
+            return Container();
+          }),
     );
   }
 }

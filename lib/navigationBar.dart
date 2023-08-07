@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_uts/halamandua.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 /// Flutter code sample for [BottomNavigationBar].
 
@@ -30,11 +31,40 @@ class _BottomNavigationBarExampleState
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 15, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Center(
-      child: Image(
-        image: AssetImage("assets/images/perpus.jpeg"),
+  static List<Widget> _widgetOptions = <Widget>[
+    CarouselSlider(
+      options: CarouselOptions(
+        height: 350.0,
+        initialPage: 0,
+        autoPlay: true,
+        enlargeCenterPage: true,
+        aspectRatio: 16 / 9,
+        autoPlayCurve: Curves.fastOutSlowIn,
+        enableInfiniteScroll: true,
+        autoPlayAnimationDuration: Duration(milliseconds: 800),
+        viewportFraction: 0.8,
       ),
+      items: [
+        AssetImage("assets/images/perpus.jpeg"),
+        AssetImage("assets/images/slider2.jpeg"),
+        AssetImage("assets/images/slider3.jpeg"),
+      ].map((image) {
+        return Builder(
+          builder: (BuildContext context) {
+            return Container(
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.symmetric(horizontal: 5.0),
+              decoration: const BoxDecoration(
+                color: Colors.amber,
+              ),
+              child: Image(
+                image: image,
+                fit: BoxFit.fill,
+              ),
+            );
+          },
+        );
+      }).toList(),
     ),
     MyUno(),
     Text(
@@ -65,11 +95,6 @@ class _BottomNavigationBarExampleState
           BottomNavigationBarItem(
             icon: Icon(Icons.book),
             label: 'book',
-            backgroundColor: Colors.green,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
             backgroundColor: Colors.green,
           ),
         ],

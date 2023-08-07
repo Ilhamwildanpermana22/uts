@@ -1,26 +1,23 @@
 // To parse this JSON data, do
 //
-//     final listDataBookResponse = listDataBookResponseFromJson(jsonString);
+//     final bookData = bookDataFromJson(jsonString);
 
 import 'dart:convert';
 
-ListDataBookResponse listDataBookResponseFromJson(String str) =>
-    ListDataBookResponse.fromJson(json.decode(str));
+BookData bookDataFromJson(String str) => BookData.fromJson(json.decode(str));
 
-String listDataBookResponseToJson(ListDataBookResponse data) =>
-    json.encode(data.toJson());
+String bookDataToJson(BookData data) => json.encode(data.toJson());
 
-class ListDataBookResponse {
+class BookData {
   List<Datum> data;
   Meta meta;
 
-  ListDataBookResponse({
+  BookData({
     required this.data,
     required this.meta,
   });
 
-  factory ListDataBookResponse.fromJson(Map<String, dynamic> json) =>
-      ListDataBookResponse(
+  factory BookData.fromJson(Map<String, dynamic> json) => BookData(
         data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
         meta: Meta.fromJson(json["meta"]),
       );
@@ -57,7 +54,7 @@ class Attributes {
   DateTime updatedAt;
   DateTime publishedAt;
   String buku;
-  String? images;
+  String images;
 
   Attributes({
     required this.isi,
@@ -65,7 +62,7 @@ class Attributes {
     required this.updatedAt,
     required this.publishedAt,
     required this.buku,
-    this.images,
+    required this.images,
   });
 
   factory Attributes.fromJson(Map<String, dynamic> json) => Attributes(

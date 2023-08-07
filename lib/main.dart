@@ -53,7 +53,7 @@ class LoginPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    "E-mail",
+                    "NIM",
                     style:
                         textTextStyle.copyWith(fontSize: 20, fontWeight: bold),
                   ),
@@ -68,7 +68,7 @@ class LoginPage extends StatelessWidget {
                     child: const TextField(
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: "ilhamwildanpermana22@gmail.com",
+                        hintText: "**********",
                         contentPadding:
                             EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                       ),
